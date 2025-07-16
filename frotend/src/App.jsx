@@ -9,10 +9,12 @@ function App() {
   const [bal,setBal]= useState()
   const {ethereum}=window;
   useEffect(()=>{
-    ethereum.on("ChangeChainid",(chain)=>{
-      console.log(chain)
-    })
-  })
+    const getChainid=async()=>{
+      const id= await ethereum.request({method:"eth_chainId"})
+      console.log(id);      
+    }
+    getChainid()
+  },[])
   const connectfun=async()=>{
     if(!window.ethereum){
       alert("Install MetaMask frist")
@@ -32,6 +34,19 @@ function App() {
       })
       console.log(balance)
       setBal(ethers.formatEther(balance))
+  }
+  const sendtx=async()=>{
+    await ethereum.request({
+      method:"eth_sendTransaction",
+      params:[
+        {
+          to:`0xe95a1FF5E1c28225FaC694Be2B87B3BFbE88117d`,
+          from:Address,
+          value:`0x${parseInt(ethers.formatEther('1')).toString(16)}`,
+          chainId:"0xaa36a7"
+        }
+      ]
+    })
   }
 
   return (
@@ -56,8 +71,29 @@ function App() {
           {Address}
         </button>
          {bal?`Your account balance:${bal}`:bal}
+
+          
      </div>
-    
+     <div style={{display:"flex",alignItems:"center",justifyContent:"center",marginTop:"10px"}}>
+    <button 
+          style={{
+            backgroundColor: '#f6851b',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+          }}
+          onClick={sendtx}
+        >
+         Send ETC
+        </button>
+        </div>
     </>
   )
 }
