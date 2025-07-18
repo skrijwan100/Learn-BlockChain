@@ -18,7 +18,7 @@ module.exports = {
   networks:{
     hardhat:{},
      sepolia: {
-      url: "https://rpc.sepolia.org", // RPC endpoint
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`, // RPC endpoint
       accounts:[process.env.PRIVATE_KEY], // Your wallet's private key
     },
   }

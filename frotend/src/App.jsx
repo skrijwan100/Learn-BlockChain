@@ -9,19 +9,32 @@ function App() {
   const [bal, setBal] = useState()
   const { ethereum } = window;
   const [message,setMessage]= useState('')
-  const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+  const contractAddress = '0x781038Ad2b013f050BBdC03275e0e81987fF4007'
   const infuraProvider= new ethers.JsonRpcProvider(
     "https://sepolia.infura.io/v3/4f7699b599794fb6b1c3e4880987bf2c"
   )
   const WalletProvider= new BrowserProvider(ethereum)
-  const singer= WalletProvider.getSigner();
+
 
   const getContractdata= new ethers.Contract(
     contractAddress,
     contract.abi,
     infuraProvider
   )
- 
+
+
+ const sendmessage= async()=>{
+  const signer = await WalletProvider.getSigner()
+  console.log(signer)
+   const Sendcontarctnx= new ethers.Contract(
+  contractAddress,
+  contract.abi,
+  signer
+ )
+   const senddata= await Sendcontarctnx.setMessage("I am sk rijwan")
+   await senddata.wait();
+   console.log(senddata)
+ }
   const setmessage=async()=>{
     const data= await getContractdata.getMessage()
     console.log(data)
@@ -31,8 +44,8 @@ function App() {
     const getChainid = async () => {
       const id = await ethereum.request({ method: "eth_chainId" })
       console.log(id);
-         const code = await infuraProvider.getCode(contractAddress);
-         console.log(code);
+        //  const code = await infuraProvider.getCode(contractAddress);
+        //  console.log(code);
     }
     getChainid()
  
@@ -115,7 +128,7 @@ function App() {
           Send ETC
         </button>
       </div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "10px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "10px",flexDirection:"column",gap:"20px" }}>
         <button
           style={{
             backgroundColor: '#f6851b',
@@ -134,10 +147,28 @@ function App() {
         >
           GetMessage
         </button>
-        <p style={{color:"white",fontSize:"20px"}}>
-        {message}
-        </p>
+        <button
+          style={{
+            backgroundColor: '#f6851b',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+          }}
+          onClick={sendmessage}
+        >
+          SetMessage
+        </button>
       </div>
+        <div style={{color:"white",fontSize:"20px"}}>
+        {message}
+        </div>
     </>
   )
 }
